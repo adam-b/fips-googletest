@@ -1,38 +1,22 @@
 fips_begin_lib(googletest)
-    fips_dir(src)
-    fips_files(
-        gtest.cc
-        gtest-death-test.cc
-        gtest-filepath.cc
-        gtest-internal-inl.h
-        gtest-port.cc
-        gtest-printers.cc
-        gtest-test-part.cc
-        gtest-typed-test.cc
-    )
+    fips_dir(googlemock/src)
+    fips_files(gmock-all.cc)
+    fips_dir(googletest/src)
+    fips_files(gtest-all.cc)
 fips_end_lib()
 
-if (NOT FIPS_EXCEPTIONS)
-    set(GOOGLETEST_NO_EXCEPTIONS "-fno-exceptions")
-endif()
+set(GOOGLETEST_VERSION 1.9.0)
 
-if (NOT FIPS_RTTI)
-    add_definitions(-DGTEST_HAS_RTTI=0)
-    set(GOOGLETEST_NO_RTTI "-fno-rtti")
+if (CMAKE_VERSION VERSION_LESS "3.1")
+  add_definitions(-std=c++11)
 else()
-    add_definitions(-DGTEST_HAS_RTTI=1)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  if(NOT CYGWIN)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+  endif()
 endif()
 
-if (FIPS_CLANG)
-    set_target_properties(googletest PROPERTIES COMPILE_FLAGS "${GOOGLETEST_NO_EXCEPTIONS} ${GOOGLETEST_NO_RTTI}")
-elseif(FIPS_GCC)
-    set_target_properties(googletest PROPERTIES COMPILE_FLAGS "${GOOGLETEST_NO_EXCEPTIONS} ${GOOGLETEST_NO_RTTI}")
-elseif(FIPS_MSVC)
-    if (NOT FIPS_EXCEPTIONS)
-        string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}) # -fno-exceptions
-    endif()
-
-    if (NOT TB_ENABLE_RTTI)
-        string(REPLACE "/GR" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}) # -fno-rtti
-    endif()
-endif()
+if (POLICY CMP0048)
+  cmake_policy(SET CMP0048 NEW)
+endif (POLICY CMP0048)

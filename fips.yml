@@ -4,8 +4,10 @@
 ---
 exports:
     header-dirs:
-        - gtest/include
-        - gtest
+        - gtest/googlemock/include
+        - gtest/googletest/include
+        - gtest/googlemock
+        - gtest/googletest
     modules:
         googletest: gtest
 
